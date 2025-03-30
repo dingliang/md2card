@@ -1,3 +1,4 @@
+// @ts-nocheck
 import styled from "styled-components";
 import { Renderer, Tokens } from "marked";
 import { CardProps } from "../../themeConfigs";

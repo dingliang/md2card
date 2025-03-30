@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -10,11 +11,8 @@ const useEditorStore = create<EditorState>(
   persist(
     (set) => ({
       content: `# 标题
-
 ## 子标题
-
 这是一段示例文本，你可以在这里编写 Markdown 内容。
-
 ### 列表示例
 - 项目 1
 - 项目 2

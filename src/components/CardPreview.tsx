@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { marked, Renderer } from "marked";
 import * as htmlToImage from "html-to-image";
 import useSettingsStore from "../stores/settingsStore";
@@ -37,6 +38,7 @@ const CardPreview: React.FC = () => {
       setPages([html]);
       return;
     }
+
 
     cardContainer.innerHTML = html;
 

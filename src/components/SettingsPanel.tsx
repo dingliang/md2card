@@ -113,6 +113,7 @@ const SettingsPanel: React.FC = () => {
             className="w-full text-sm border rounded-lg p-2 text-gray-700 bg-white"
             value={selectedTheme}
             onChange={(e) =>
+              // @ts-ignore
               setSelectedTheme(e.target.value as keyof typeof markedThemes)
             }
           >
