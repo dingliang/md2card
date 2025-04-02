@@ -20,6 +20,16 @@ MD2Card 是一个简洁高效的 Markdown 转换工具，可以将 Markdown 文�
 - Zustand
 - Styled Components
 
+## TODO
+
+- [ ] 实现自动分页功能
+- [ ] 支持更多 Markdown 语法
+- [ ] 优化性能
+- [ ] 增加更多主题样式
+- [ ] 支持导入导出 Markdown 文件
+- [ ] 增加更多导出格式
+
+
 ## 📦 安装
 
 ```bash
@@ -70,3 +80,4 @@ console.log('Hello World');
 ## 📄 开源协议
 
 [MIT License](LICENSE)
+
