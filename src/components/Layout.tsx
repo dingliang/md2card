@@ -12,13 +12,13 @@ const Layout: React.FC<LayoutProps> = ({ children, onExport }) => {
 
   return (
     <div className="h-screen w-screen flex flex-col">
-      <Header
+      {/* <Header
         isDarkMode={isDarkMode}
         showClock={showClock}
         onDarkModeChange={setDarkMode}
         onShowClockChange={setShowClock}
         onExport={onExport}
-      />
+      /> */}
       <div
         className="flex-1 flex gap-4  bg-gray-100 "
         style={{

@@ -2,7 +2,8 @@
   margin: 1rem;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 1rem;
+  /* padding: 1rem; */
+  box-sizing: border-box;
 }
 
 .prose-indigo {

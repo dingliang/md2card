@@ -1,24 +1,25 @@
-// @ts-nocheck
 import styled from "styled-components";
 import { Renderer, Tokens } from "marked";
-import { CardProps } from "../../themeConfigs";
+import { CardConfig, CardProps } from "../../themeConfigs";
+
+
 
 const render = new Renderer();
 render.heading = function ({ text, depth }: Tokens.Heading) {
-  return `<h${depth}>${text}</h${depth}>`;
+  return `<h${depth} class="md-h${depth}">${text}</h${depth}>`;
 };
-render.blockquote = function ({ tokens }: Tokens.Blockquote) {
-  return `<blockquote class="md-blockquote">${tokens}</blockquote>`;
+render.blockquote = function ({ text }: Tokens.Blockquote) {
+  return `<blockquote class="md-blockquote">${text}</blockquote>`;
 };
 render.list = function ({ items, ordered, start }: Tokens.List) {
   const listType = ordered ? "ol" : "ul";
   const startAttr = ordered && start !== 1 ? ` start="${start}"` : "";
   return `<${listType} class="md-${listType}"${startAttr}>
   ${items
-    .map((item) => {
-      return `<li class="md-listitem">${item.text}</li>`;
-    })
-    .join("")}
+      .map((item) => {
+        return `<li class="md-listitem">${item.text}</li>`;
+      })
+      .join("")}
   </${listType}>`;
 };
 render.listitem = function ({ text }: Tokens.ListItem) {
@@ -40,28 +41,32 @@ render.table = function ({ header, align, rows }: Tokens.Table) {
   return `
     <table class="md-table">
       <thead class="md-thead">
-        ${header}
+        ${header.map((hd) => `<th class="md-th">${hd.text}</th>`)}
       </thead>
       <tbody class="md-tbody">
-        ${rows}
+        ${rows.map((row) => {
+    return `<tr class="md-tr">
+          ${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")}
+            </tr>`;
+  })}
       </tbody>
     </table>
   `;
 };
-render.tablerow = function ({ text }: Tokens.TableRow) {
-  return `<tr class="md-tr">${text}</tr>`;
-};
-render.tablecell = function ({ text }: Tokens.TableCell) {
-  return `<td class="md-td">${text}</td>`;
-};
+// render.tablerow = function ({ text }: Tokens.TableRow) {
+//   return `<tr class="md-tr">${text}</tr>`;
+// };
+// render.tablecell = function ({ text }: Tokens.TableCell) {
+//   return `<td class="md-td">${text}</td>`;
+// };
 render.link = function ({ href, title, tokens }: Tokens.Link) {
   return `<a class="md-link" href="${href}"${title ? ` title="${title}"` : ""}>${tokens}</a>`;
 };
 render.image = function ({ href, title, text }: Tokens.Image) {
-  return `<img class="md-image" src="${href}" alt="${text}"${title ? ` title="${title}"` : ""} />`;
+  return `<img class="md-image" src="${href}" />`;
 };
 render.space = function (token: Tokens.Space) {
-  return ""; //'<br />';
+  return "<br />";
 };
 render.html = function (token: Tokens.HTML) {
   return token.text;
@@ -72,9 +77,9 @@ render.hr = function (token: Tokens.Hr) {
 render.checkbox = function (token: Tokens.Checkbox) {
   return `<input type="checkbox" ${token.checked ? "checked" : ""} disabled />`;
 };
-render.paragraph = function (token: Tokens.Paragraph) {
-  return `<p class="md-text">${token.text}</p>`;
-};
+// render.paragraph = function (token: Tokens.Paragraph) {
+//   return `<p class="md-text">${token.text}</p>`;
+// };
 render.br = function (token: Tokens.Br) {
   return "<br />";
 };
@@ -85,8 +90,12 @@ render.text = function (token: Tokens.Text) {
   return token.text;
 };
 
-render.code = function (token: Tokens.Code) {
-  return `<code class="md-code">${token.text}</code>`;
+render.code = function ({text,lang,escaped}: Tokens.Code) {
+  return `
+  <pre class="md-pre">
+    <code class="md-code language-${lang}">${text}</code>
+  </pre>
+  `;
 };
 
 const CardContianer = styled.div`
@@ -245,47 +254,30 @@ const CardContianer = styled.div`
 `;
 
 const Card: React.FC = ({
-  pages,
+  page,
   width: settingWidth,
   height: settingHeight,
-  tempContainerRef,
+  containerRef,
 }: CardProps) => {
   const width = settingWidth - 80;
-  const height = settingHeight == -1 ? "auto" :settingHeight - 80;
+  const height = ~settingHeight ? "auto" : settingHeight;
 
   return (
-    <div className="flex flex-col gap-4  items-center" id="preview">
-      {pages.map((pageHtml, index) => (
-        <CardContianer
-          key={index}
-          className={`prose prose-indigo prose-default`}
-          style={{ width, height }}
-        >
-          <div
-            className="card-content"
-            dangerouslySetInnerHTML={{ __html: pageHtml }}
-          />
-        </CardContianer>
-      ))}
+    <CardContianer
+    className={`prose prose-class`}
+    style={{ width }}
+  >
+    <div
+      className="card-content"
+      ref={containerRef}
+      dangerouslySetInnerHTML={{ __html: page }}
+    />
+  </CardContianer>
 
-      <CardContianer
-        style={{
-          position: "absolute",
-          top: "0",
-          visibility: "hidden",
-          width,
-          height,
-        }}
-        className={`prose prose-indigo prose-default`}
-        ref={tempContainerRef}
-      >
-        <div className="card-content" />
-      </CardContianer>
-    </div>
   );
 };
 
-const ThemeConfig = {
+const ThemeConfig:CardConfig = {
   name: "毛玻璃",
   component: Card,
   renderer: render,

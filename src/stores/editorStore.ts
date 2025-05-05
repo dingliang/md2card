@@ -10,22 +10,54 @@ interface EditorState {
 const useEditorStore = create<EditorState>(
   persist(
     (set) => ({
-      content: `# 标题
-## 子标题
-这是一段示例文本，你可以在这里编写 Markdown 内容。
-### 列表示例
-- 项目 1
-- 项目 2
-- 项目 3
+      content: `
+  # 一级标题
 
-### 代码示例
+这是一个很长很长的段落，用于测试分页系统对普通文本的智能分割能力。这段话会被自动拆分到多个页面中，确保页面不会出现内容溢出问题。
+
+## 二级标题
+
+- 无序列表项 A
+- 无序列表项 B
+- 无序列表项 C
+
+1. 有序项一
+2. 有序项二
+3. 有序项三
+
+### 表格示例
+
+| 姓名 | 分数 | 等级 |
+|------|------|------|
+| Alice | 95 | A |
+| Bob | 88 | B |
+| Charlie | 92 | A |
+| Diana | 84 | B |
+| Ethan | 77 | C |
+| Fiona | 89 | B |
+| George | 91 | A |
+
+### 图片示例
+
+![占位图](https://via.placeholder.com/600x300)
+
+### 引用和代码
+
+> 这是一段引用内容，用于测试分页逻辑。
+
+行内代码示例：\`console.log('Hello')\`
+
 \`\`\`javascript
-console.log('Hello World');
+function greet(name) {
+  console.log("Hello " + name);
+}
+greet("World");
 \`\`\`
 
-> 这是一段引用文本
+---
 
-**粗体文本** *斜体文本*`,
+分页测试结束。
+      `,
       setContent: (content: string) => set({ content }),
     }),
     {

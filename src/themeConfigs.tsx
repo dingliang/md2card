@@ -1,16 +1,17 @@
 import { Renderer } from "marked";
 
-export interface CardProps {
-  pages: string[];
+export interface CardProps  {
+  page: string;
   width: number;
   height: number;
-  tempContainerRef: React.RefObject<HTMLDivElement | null>;
+  containerRef?: React.RefObject<HTMLDivElement>;
+  contentRef?: React.RefObject<HTMLDivElement>;
 }
+
 export interface CardConfig {
   name: string;
   component: React.FunctionComponent<CardProps>;
   renderer: Renderer;
-  className: string;
 }
 
 // 找出./cards/*Card.tsx文件

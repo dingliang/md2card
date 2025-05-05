@@ -1,24 +1,23 @@
-// @ts-nocheck
 import styled from "styled-components";
 import { Renderer, Tokens } from "marked";
-import { CardProps } from "../../themeConfigs";
+import { CardConfig, CardProps } from "../../themeConfigs";
 
 const render = new Renderer();
 render.heading = function ({ text, depth }: Tokens.Heading) {
-  return `<h${depth}>${text}</h${depth}>`;
+  return `<h${depth} class="md-h${depth}">${text}</h${depth}>`;
 };
-render.blockquote = function ({ tokens }: Tokens.Blockquote) {
-  return `<blockquote class="md-blockquote">${tokens}</blockquote>`;
+render.blockquote = function ({ text }: Tokens.Blockquote) {
+  return `<blockquote class="md-blockquote">${text}</blockquote>`;
 };
 render.list = function ({ items, ordered, start }: Tokens.List) {
   const listType = ordered ? "ol" : "ul";
   const startAttr = ordered && start !== 1 ? ` start="${start}"` : "";
   return `<${listType} class="md-${listType}"${startAttr}>
   ${items
-    .map((item) => {
-      return `<li class="md-listitem">${item.text}</li>`;
-    })
-    .join("")}
+      .map((item) => {
+        return `<li class="md-listitem">${item.text}</li>`;
+      })
+      .join("")}
   </${listType}>`;
 };
 render.listitem = function ({ text }: Tokens.ListItem) {
@@ -40,25 +39,29 @@ render.table = function ({ header, align, rows }: Tokens.Table) {
   return `
     <table class="md-table">
       <thead class="md-thead">
-        ${header}
+        ${header.map((hd) => `<th class="md-th">${hd.text}</th>`)}
       </thead>
       <tbody class="md-tbody">
-        ${rows}
+        ${rows.map((row) => {
+    return `<tr class="md-tr">
+          ${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")}
+            </tr>`;
+  })}
       </tbody>
     </table>
   `;
 };
-render.tablerow = function ({ text }: Tokens.TableRow) {
-  return `<tr class="md-tr">${text}</tr>`;
-};
-render.tablecell = function ({ text }: Tokens.TableCell) {
-  return `<td class="md-td">${text}</td>`;
-};
+// render.tablerow = function ({ text }: Tokens.TableRow) {
+//   return `<tr class="md-tr">${text}</tr>`;
+// };
+// render.tablecell = function ({ text }: Tokens.TableCell) {
+//   return `<td class="md-td">${text}</td>`;
+// };
 render.link = function ({ href, title, tokens }: Tokens.Link) {
   return `<a class="md-link" href="${href}"${title ? ` title="${title}"` : ""}>${tokens}</a>`;
 };
 render.image = function ({ href, title, text }: Tokens.Image) {
-  return `<img class="md-image" src="${href}" alt="${text}"${title ? ` title="${title}"` : ""} />`;
+  return `<img class="md-image" src="${href}" />`;
 };
 render.space = function (token: Tokens.Space) {
   return "<br />";
@@ -72,9 +75,9 @@ render.hr = function (token: Tokens.Hr) {
 render.checkbox = function (token: Tokens.Checkbox) {
   return `<input type="checkbox" ${token.checked ? "checked" : ""} disabled />`;
 };
-render.paragraph = function (token: Tokens.Paragraph) {
-  return `<p class="md-text">${token.text}</p>`;
-};
+// render.paragraph = function (token: Tokens.Paragraph) {
+//   return `<p class="md-text">${token.text}</p>`;
+// };
 render.br = function (token: Tokens.Br) {
   return "<br />";
 };
@@ -85,11 +88,16 @@ render.text = function (token: Tokens.Text) {
   return token.text;
 };
 
-render.code = function (token: Tokens.Code) {
-  return `<code class="md-code">${token.text}</code>`;
+render.code = function ({text,lang,escaped}: Tokens.Code) {
+  return `
+  <pre class="md-pre">
+    <code class="md-code language-${lang}">${text}</code>
+  </pre>
+  `;
 };
 
-const CardContianer = styled.div`
+
+const CardContainer = styled.div`
   position: relative;
   border-radius: 8px;
   padding: 16px;
@@ -172,10 +180,10 @@ const CardContianer = styled.div`
     background: rgba(0, 0, 0, 0.05);
     padding: 0.2em 0.4em;
     border-radius: 3px;
+    color: #333;
   }
 
   .md-codespan {
-    background: rgba(0, 0, 0, 0.05);
     padding: 0.2em 0.4em;
     border-radius: 3px;
   }
@@ -252,50 +260,51 @@ const CardContianer = styled.div`
     transparent 2px
   );
   background-size: 20px 20px;
+
+
+
+.page {
+  width: 800px;
+  height: 500px;
+  margin: 20px auto;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+}
+
 `;
 
 const Card: React.FC = ({
-  pages,
+  page,
   width: settingWidth,
   height: settingHeight,
-  tempContainerRef,
+  containerRef,
 }: CardProps) => {
-  const width = settingWidth ;
-  const height = ~settingHeight ? "auto" :settingHeight ;
+  const width = settingWidth;
+  const height = ~settingHeight ? "auto" : settingHeight;
 
   return (
-    <div className="flex flex-col gap-4  items-center" id="preview">
-        {pages.map((pageHtml, index) => (
-        <CardContianer
-          key={index}
-          className={`prose prose-indigo prose-default`}
-          style={{ width, height }}
-        >
-          <div
-            className="card-content"
-            dangerouslySetInnerHTML={{ __html: pageHtml }}
-          />
-        </CardContianer>
-      ))}
 
-      <CardContianer
-        style={{
-          position: "absolute",
-          top: "0",
-          visibility: "hidden",
-          width,
-          height,
-        }}
-        className={`prose prose-indigo prose-default`}
-        ref={tempContainerRef}
-      >
-        <div className="card-content" />
-      </CardContianer>
-    </div>
+    <CardContainer
+      className={`prose prose-indigo prose-default`}
+      style={{ width, height }}
+    >
+      <div
+        className="card-content"
+        ref={containerRef}
+        dangerouslySetInnerHTML={{ __html: page }}
+      />
+    </CardContainer>
   );
 };
 
-const ThemeConfig = {
+const ThemeConfig: CardConfig = {
   name: "默认",
   component: Card,
   renderer: render,
