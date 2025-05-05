@@ -22,8 +22,9 @@ MD2Card 是一个简洁高效的 Markdown 转换工具，可以将 Markdown 文�
 
 ## TODO
 
-- [ ] 实现自动分页功能
-- [ ] 支持更多 Markdown 语法
+- ✅ 实现自动分页功能
+- ✅ 支持更多 Markdown 语法
+- [ ] 实现图片同源加载
 - [ ] 优化性能
 - [ ] 增加更多主题样式
 - [ ] 支持导入导出 Markdown 文件
@@ -53,31 +54,3 @@ pnpm build
 ## 📸 预览
 
 ![项目预览](src/assets/image.png)
-
-## 🎨 示例
-
-```markdown
-# 标题
-## 子标题
-
-这是一段示例文本，你可以在这里编写 Markdown 内容。
-
-### 列表示例
-- 项目 1
-- 项目 2
-- 项目 3
-
-### 代码示例
-```javascript
-console.log('Hello World');
-```
-
-> 这是一段引用文本
-
-**粗体文本** *斜体文本*
-```
-
-## 📄 开源协议
-
-[MIT License](LICENSE)
-
