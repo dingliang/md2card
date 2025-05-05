@@ -33,8 +33,6 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
 }) => {
   const [pages, setPages] = useState<JSX.Element[]>([]);
 
-
-
   const paginate = (sourceEl: HTMLElement) => {
     const wrapper = document.createElement('div');
     wrapper.style.position = 'absolute';
@@ -120,7 +118,7 @@ const PaginatedMarkdownViewer: React.FC<PaginatedMarkdownViewerProps> = ({
     if (html) {
       renderMarkdown();
     }
-  }, [html]);
+  }, [html,CardComponent,pageHeight,pageWidth]);
 
   return (
     <div className="pages-wrapper">

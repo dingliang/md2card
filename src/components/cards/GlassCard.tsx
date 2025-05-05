@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { Renderer, Tokens } from "marked";
 import { CardConfig, CardProps } from "../../themeConfigs";
 
-
-
 const render = new Renderer();
 render.heading = function ({ text, depth }: Tokens.Heading) {
   return `<h${depth} class="md-h${depth}">${text}</h${depth}>`;
@@ -41,24 +39,20 @@ render.table = function ({ header, align, rows }: Tokens.Table) {
   return `
     <table class="md-table">
       <thead class="md-thead">
-        ${header.map((hd) => `<th class="md-th">${hd.text}</th>`)}
+        ${header.map((hd) => `<th class="md-th"> ${hd.text} </th>`).join("")}
       </thead>
       <tbody class="md-tbody">
-        ${rows.map((row) => {
-    return `<tr class="md-tr">
-          ${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")}
-            </tr>`;
-  })}
+        ${rows.map((row) => `<tr class="md-tr">${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")} </tr>`).join("")}
       </tbody>
     </table>
   `;
 };
-// render.tablerow = function ({ text }: Tokens.TableRow) {
-//   return `<tr class="md-tr">${text}</tr>`;
-// };
-// render.tablecell = function ({ text }: Tokens.TableCell) {
-//   return `<td class="md-td">${text}</td>`;
-// };
+render.tablerow = function ({ text }: Tokens.TableRow) {
+  return `<tr class="md-tr">${text}</tr>`;
+};
+render.tablecell = function ({ text }: Tokens.TableCell) {
+  return `<td class="md-td">${text}</td>`;
+};
 render.link = function ({ href, title, tokens }: Tokens.Link) {
   return `<a class="md-link" href="${href}"${title ? ` title="${title}"` : ""}>${tokens}</a>`;
 };
@@ -81,16 +75,16 @@ render.checkbox = function (token: Tokens.Checkbox) {
 //   return `<p class="md-text">${token.text}</p>`;
 // };
 render.br = function (token: Tokens.Br) {
-  return "<br />";
+  return `<br class="md-br" />`;
 };
 render.del = function (token: Tokens.Del) {
   return `<del class="md-del">${token.text}</del>`;
 };
 render.text = function (token: Tokens.Text) {
-  return token.text;
+  return `<span class="md-text">${token.text}</span>`;
 };
 
-render.code = function ({text,lang,escaped}: Tokens.Code) {
+render.code = function ({ text, lang, escaped }: Tokens.Code) {
   return `
   <pre class="md-pre">
     <code class="md-code language-${lang}">${text}</code>
@@ -109,7 +103,6 @@ const CardContianer = styled.div`
   box-sizing: border-box;
   // background-image: radial-gradient(circle, rgba(255,255,255,0.2) 2px, transparent 2px);
   // background-size: 20px 20px;
-
   // overflow: hidden;
 
   &::before {
@@ -148,6 +141,7 @@ const CardContianer = styled.div`
     z-index: 1;
     background-color: rgba(255, 255, 255, 0.1);
     height: 100%;
+    color: #fff;
   }
 
   .md-blockquote {
@@ -203,6 +197,7 @@ const CardContianer = styled.div`
   .md-th {
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 0.5em;
+    color: #fff;
   }
 
   .md-link {
@@ -228,6 +223,11 @@ const CardContianer = styled.div`
   .md-text {
     line-height: 1.6;
     margin: 1em 0;
+    color: #fff;
+  }
+
+  p{
+    color: azure;
   }
 
   .md-del {
@@ -259,25 +259,25 @@ const Card: React.FC = ({
   height: settingHeight,
   containerRef,
 }: CardProps) => {
-  const width = settingWidth - 80;
+  const width = settingWidth;
   const height = ~settingHeight ? "auto" : settingHeight;
 
   return (
     <CardContianer
-    className={`prose prose-class`}
-    style={{ width }}
-  >
-    <div
-      className="card-content"
-      ref={containerRef}
-      dangerouslySetInnerHTML={{ __html: page }}
-    />
-  </CardContianer>
+      className={`prose prose-class`}
+      style={{ width, height }}
+    >
+      <div
+        className="card-content"
+        ref={containerRef}
+        dangerouslySetInnerHTML={{ __html: page }}
+      />
+    </CardContianer>
 
   );
 };
 
-const ThemeConfig:CardConfig = {
+const ThemeConfig: CardConfig = {
   name: "毛玻璃",
   component: Card,
   renderer: render,

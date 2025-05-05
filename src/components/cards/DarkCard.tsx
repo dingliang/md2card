@@ -39,24 +39,20 @@ render.table = function ({ header, align, rows }: Tokens.Table) {
   return `
     <table class="md-table">
       <thead class="md-thead">
-        ${header.map((hd) => `<th class="md-th">${hd.text}</th>`)}
+        ${header.map((hd) => `<th class="md-th"> ${hd.text} </th>`).join("")}
       </thead>
       <tbody class="md-tbody">
-        ${rows.map((row) => {
-    return `<tr class="md-tr">
-          ${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")}
-            </tr>`;
-  })}
+        ${rows.map((row) => `<tr class="md-tr">${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")} </tr>`).join("")}
       </tbody>
     </table>
   `;
 };
-// render.tablerow = function ({ text }: Tokens.TableRow) {
-//   return `<tr class="md-tr">${text}</tr>`;
-// };
-// render.tablecell = function ({ text }: Tokens.TableCell) {
-//   return `<td class="md-td">${text}</td>`;
-// };
+render.tablerow = function ({ text }: Tokens.TableRow) {
+  return `<tr class="md-tr">${text}</tr>`;
+};
+render.tablecell = function ({ text }: Tokens.TableCell) {
+  return `<td class="md-td">${text}</td>`;
+};
 render.link = function ({ href, title, tokens }: Tokens.Link) {
   return `<a class="md-link" href="${href}"${title ? ` title="${title}"` : ""}>${tokens}</a>`;
 };
@@ -79,22 +75,23 @@ render.checkbox = function (token: Tokens.Checkbox) {
 //   return `<p class="md-text">${token.text}</p>`;
 // };
 render.br = function (token: Tokens.Br) {
-  return "<br />";
+  return `<br class="md-br" />`;
 };
 render.del = function (token: Tokens.Del) {
   return `<del class="md-del">${token.text}</del>`;
 };
 render.text = function (token: Tokens.Text) {
-  return token.text;
+  return `<span class="md-text">${token.text}</span>`;
 };
 
-render.code = function ({text,lang,escaped}: Tokens.Code) {
+render.code = function ({ text, lang, escaped }: Tokens.Code) {
   return `
   <pre class="md-pre">
     <code class="md-code language-${lang}">${text}</code>
   </pre>
   `;
 };
+
 
 const CardContainer = styled.div`
   position: relative;
@@ -257,7 +254,7 @@ const Card: React.FC = ({
   height: settingHeight,
   containerRef,
 }: CardProps) => {
-  const width = settingWidth - 80;
+  const width = settingWidth;
   const height = ~settingHeight ? "auto" : settingHeight;
 
   return (

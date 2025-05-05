@@ -19,28 +19,26 @@ const CardPreview: React.FC = () => {
     cardHeight: height,
     viewMode,
   } = useSettingsStore();
-  
+
   const [html, setHtml] = useState('');
   const Card = cardComponents[selectedTheme].component;
   const renderer = cardComponents[selectedTheme].renderer;
 
   async function markdownToHtml(markdown: string) {
-    return await  marked.parse(markdown, { renderer });
+    return await marked.parse(markdown, { renderer });
   }
+
 
 
   useEffect(() => {
     markdownToHtml(markdown).then(parsed => setHtml(parsed));
-  }, [markdown, renderer]);
+  }, [markdown, renderer, selectedTheme]);
 
   return (
-    <div
-      className="bg-gray-100 rounded-lg shadow-sm p-8 overflow-auto  h-full"
-    >
-
+    <div className="bg-gray-100 rounded-lg shadow-sm p-8 overflow-auto  h-full" >
       {
         viewMode === "长卡片" ? (
-          <LongMarkdownViewer 
+          <LongMarkdownViewer
             html={html}
             CardComponent={Card}
             pageWidth={width}
@@ -50,7 +48,7 @@ const CardPreview: React.FC = () => {
             CardComponent={Card}
             pageWidth={width}
             pageHeight={height}
-            html={html}  />
+            html={html} />
         )
       }
     </div>
