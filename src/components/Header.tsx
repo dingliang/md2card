@@ -17,8 +17,8 @@ const Header: React.FC<HeaderProps> = ({
   onExport,
 }) => {
   return (
-    <header className="h-[50px] flex flex-row justify-between items-center px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
-      <span className="text-2xl font-bold text-gray-800 tracking-tight">
+    <header className="h-[50px] flex flex-row justify-between items-center px-6 py-4 bg-white  border-b border-gray-200  shadow-sm">
+      <span className="text-2xl font-bold text-gray-800  tracking-tight">
         MD2Card
       </span>
       <ButtonGroup

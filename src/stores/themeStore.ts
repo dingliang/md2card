@@ -13,7 +13,7 @@ const useThemeStore = create<ThemeState>(
   persist(
     (set) => ({
       isDarkMode: false,
-      showClock: true,
+      showClock: false,
       setDarkMode: (isDark: boolean) => set({ isDarkMode: isDark }),
       setShowClock: (show: boolean) => set({ showClock: show }),
     }),

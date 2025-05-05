@@ -17,7 +17,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({
 }) => {
   return (
     <div className="flex items-center space-x-4">
-      <button
+      {/* <button
         onClick={() => onDarkModeChange(!isDarkMode)}
         className="p-2 rounded-full hover:bg-gray-200 transition-colors"
       >
@@ -32,7 +32,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({
         className="p-2 rounded-full hover:bg-gray-200 transition-colors"
       >
         <FiClock className="w-5 h-5" />
-      </button>
+      </button> */}
       <button
         onClick={onExport}
         className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition-colors font-medium shadow-sm"
