@@ -1,6 +1,6 @@
 .prose {
-  margin: 1rem;
-  border: 1px solid #e5e7eb;
+  margin: 0;
+  border: 0 solid #e5e7eb;
   border-radius: 8px;
   /* padding: 1rem; */
   box-sizing: border-box;
