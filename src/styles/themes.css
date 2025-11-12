@@ -6,6 +6,14 @@
   box-sizing: border-box;
 }
 
+/* 移除 tailwind typography 给 code 添加的反引号 */
+.prose code::before,
+.prose code::after,
+.prose .md-codespan::before,
+.prose .md-codespan::after {
+  content: none !important;
+}
+
 .prose-indigo {
   --tw-prose-body: #374151;
 }

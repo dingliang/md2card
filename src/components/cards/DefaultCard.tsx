@@ -21,7 +21,7 @@ render.list = function ({ items, ordered, start }: Tokens.List) {
   </${listType}>`;
 };
 render.listitem = function ({ text }: Tokens.ListItem) {
-  return `<li class="md-listitem">${text}</li>`;
+  return `<li class="md-listitem">${parseInline(text, { renderer: render })}</li>`;
 };
 render.code = function ({ text, lang, escaped }: Tokens.Code) {
   return `<pre class="md-pre"><code class="md-code language-${lang}">${text}</code></pre>`;

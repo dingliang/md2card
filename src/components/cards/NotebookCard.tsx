@@ -21,7 +21,7 @@ render.list = function ({ items, ordered, start }: Tokens.List) {
   </${listType}>`;
 };
 render.listitem = function ({ text }: Tokens.ListItem) {
-  return `<li class="md-listitem">${text}</li>`;
+  return `<li class="md-listitem">${parseInline(text, { renderer: render })}</li>`;
 };
 render.code = function ({ text, lang }: Tokens.Code) {
   return `<pre class="md-pre"><code class="md-code language-${lang}">${text}</code></pre>`;
@@ -85,6 +85,7 @@ render.text = function ({ text }: Tokens.Text) {
 const CardContainer = styled.div`
   position: relative;
   padding: 20px;
+  padding-top: 44px;
   background-color: #7b5fd4;
   box-sizing: border-box;
   overflow: hidden;
@@ -92,25 +93,25 @@ const CardContainer = styled.div`
   &::before {
     content: "";
     position: absolute;
-    top: 10px;
+    top: 23px;
     left: 0;
     right: 0;
-    height: 0;
-    border-top: 6px dashed rgba(255,255,255,0.9);
+    height: 2px;
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.9) 0 12px, transparent 12px 30px);
   }
 
   &::after {
     content: "";
     position: absolute;
-    top: 0;
+    top: 24px;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 26px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background: #ffd8ef;
-    border: 4px solid #ffffff;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.2);
+    background: #ffffff;
+    border: 4px solid #CA6CE5;
+    box-shadow: none;
   }
 
   .card-content {
@@ -122,7 +123,7 @@ const CardContainer = styled.div`
     position: relative;
     background: #ffffff;
     border: 3px solid #2a0933;
-    box-shadow: 12px 12px 0 0 #2a0933, 22px 22px 0 0 #c28ae9;
+    box-shadow: 12px 12px 0 0 #C28BE9;
     padding: 14px;
     min-height: 100%;
   }
@@ -138,6 +139,24 @@ const CardContainer = styled.div`
   .md-h1 { font-size: 1.8em; }
   .md-h2 { font-size: 1.5em; }
   .md-h3 { font-size: 1.2em; }
+
+  /* 一号标题：描边紫色、浅紫填充，居中、紧凑 */
+  .md-h1 {
+    color: #c4a5ff !important;
+    -webkit-text-fill-color: #c4a5ff !important;
+    font-size: 2em;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    -webkit-text-stroke: 2px #000000 !important;
+    paint-order: stroke fill;
+    text-shadow:
+      0 0 0 #000,
+      1px 0 0 #000,
+      -1px 0 0 #000,
+      0 1px 0 #000,
+      0 -1px 0 #000;
+    margin: 0.5em 0 0.2em;
+  }
 
   .md-h2::after {
     content: "";
