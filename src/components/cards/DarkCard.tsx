@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import { Renderer, Tokens } from "marked";
+import { Renderer, Tokens, parseInline } from "marked";
 import { CardConfig, CardProps } from "../../themeConfigs";
 
 const render = new Renderer();
 render.heading = function ({ text, depth }: Tokens.Heading) {
-  return `<h${depth} class="md-h${depth}">${text}</h${depth}>`;
+  return `<h${depth} class="md-h${depth}">${parseInline(text, { renderer: render })}</h${depth}>`;
 };
 render.blockquote = function ({ text }: Tokens.Blockquote) {
-  return `<blockquote class="md-blockquote">${text}</blockquote>`;
+  return `<blockquote class="md-blockquote">${parseInline(text, { renderer: render })}</blockquote>`;
 };
 render.list = function ({ items, ordered, start }: Tokens.List) {
   const listType = ordered ? "ol" : "ul";
@@ -15,7 +15,7 @@ render.list = function ({ items, ordered, start }: Tokens.List) {
   return `<${listType} class="md-${listType}"${startAttr}>
   ${items
       .map((item) => {
-        return `<li class="md-listitem">${item.text}</li>`;
+        return `<li class="md-listitem">${parseInline(item.text, { renderer: render })}</li>`;
       })
       .join("")}
   </${listType}>`;
@@ -27,7 +27,8 @@ render.code = function ({ text, lang, escaped }: Tokens.Code) {
   return `<pre class="md-pre"><code class="md-code language-${lang}">${text}</code></pre>`;
 };
 render.codespan = function ({ text }: Tokens.Codespan) {
-  return `<code class="md-codespan">${text}</code>`;
+  const inner = text.replace(/`+/g, "");
+  return `<code class="md-codespan">${inner}</code>`;
 };
 render.strong = function ({ raw, text }: Tokens.Strong) {
   return `<strong class="md-strong">${text}</strong>`;
@@ -39,10 +40,10 @@ render.table = function ({ header, align, rows }: Tokens.Table) {
   return `
     <table class="md-table">
       <thead class="md-thead">
-        ${header.map((hd) => `<th class="md-th"> ${hd.text} </th>`).join("")}
+        ${header.map((hd) => `<th class="md-th"> ${parseInline(hd.text, { renderer: render })} </th>`).join("")}
       </thead>
       <tbody class="md-tbody">
-        ${rows.map((row) => `<tr class="md-tr">${row.map((cell) => `<td class="md-td">${cell.text}</td>`).join("")} </tr>`).join("")}
+        ${rows.map((row) => `<tr class="md-tr">${row.map((cell) => `<td class="md-td">${parseInline(cell.text, { renderer: render })}</td>`).join("")} </tr>`).join("")}
       </tbody>
     </table>
   `;
@@ -60,7 +61,7 @@ render.image = function ({ href, title, text }: Tokens.Image) {
   return `<img class="md-image" src="${href}" />`;
 };
 render.space = function (token: Tokens.Space) {
-  return "<br />";
+  return "";
 };
 render.html = function (token: Tokens.HTML) {
   return token.text;
@@ -255,7 +256,7 @@ const Card: React.FC = ({
   containerRef,
 }: CardProps) => {
   const width = settingWidth;
-  const height = ~settingHeight ? "auto" : settingHeight;
+  const height = settingHeight === -1 ? "auto" : settingHeight;
 
   return (
     <CardContainer

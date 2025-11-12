@@ -35,7 +35,7 @@ const CardPreview: React.FC = () => {
   }, [markdown, renderer, selectedTheme]);
 
   return (
-    <div className="bg-gray-100 rounded-lg shadow-sm p-8 overflow-auto  h-full" >
+    <div id="preview" className="no-radius bg-gray-100 shadow-sm p-8 overflow-auto h-full" >
       {
         viewMode === "长卡片" ? (
           <LongMarkdownViewer
