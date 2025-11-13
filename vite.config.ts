@@ -6,5 +6,13 @@ export default defineConfig({
   plugins: [react()],
   css: {
     postcss: './postcss.config.js'
+  },
+  server: {
+    proxy: {
+      '/mcp': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
+      }
+    }
   }
 })
