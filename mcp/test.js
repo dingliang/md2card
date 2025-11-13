@@ -21,15 +21,18 @@ async function main() {
       name: 'generate-png',
       arguments: {
         markdown: '# 测试\n这是一个示例',
-        theme: '默认',
-        outputDir: exportsDir,
-        filename: 'mcp-test.png'
+        theme: '默认'
       }
     }
   }, CallToolResultSchema)
 
   console.log('Raw result:', JSON.stringify(res, null, 2))
-  const expected = path.join(exportsDir, 'mcp-test.png')
+  const url = (res.structuredContent && res.structuredContent.url)
+    || (res.content && res.content[0] && res.content[0].type === 'text' && res.content[0].text)
+    || ''
+  if (!url) throw new Error('no url returned')
+  const name = new URL(url).pathname.split('/').pop()
+  const expected = path.join(exportsDir, name)
   if (!fs.existsSync(expected)) throw new Error('file not created')
   console.log('OK', expected)
   process.exit(0)

@@ -40,10 +40,8 @@ export function createMcpServer() {
     title: '生成 PNG 图片',
     description: '输入 markdown 与主题名生成卡片 PNG',
     inputSchema: {
-      markdown: z.string(),
-      theme: z.string().refine(t => ALLOWED_THEMES.includes(t), {
-        message: `theme must be one of: ${ALLOWED_THEMES.join(', ')}`
-      })
+      markdown: z.string().describe('Markdown 文本内容'),
+      theme: z.string().describe('主题名称（仅限内置主题，使用现有主题名）')
     },
     outputSchema: {
       url: z.string().url()
