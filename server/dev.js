@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import path from 'node:path'
 import { createServer as createViteServer } from 'vite'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { createMcpServer } from '../mcp/server.js'
@@ -12,7 +13,8 @@ const REQUIRED_API_KEY = process.env.MCP_API_KEY || 'woaihengheng'
 const app = express()
 app.use(cors({ origin: true, credentials: true, methods: ['POST', 'OPTIONS'] }))
 app.use(express.json())
-app.use('/files', express.static(new URL('../exports', import.meta.url).pathname))
+const exportsDir = path.resolve(process.cwd(), 'exports')
+app.use('/files', express.static(exportsDir))
 
 const mcpServer = createMcpServer()
 
@@ -31,7 +33,8 @@ const auth = (req, res, next) => {
 
 app.post('/mcp', auth, async (req, res) => {
   process.env.MD2CARD_URL = MD2CARD_URL
-  process.env.FILE_BASE_URL = `http://localhost:${PORT}`
+  const hostBase = `${req.protocol}://${req.headers.host}`
+  process.env.FILE_BASE_URL = hostBase
   const transport = new StreamableHTTPServerTransport({ enableJsonResponse: true })
   res.on('close', () => transport.close())
   await mcpServer.connect(transport)

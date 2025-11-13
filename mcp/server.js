@@ -196,6 +196,8 @@ if (httpPort) {
 
   app.post('/mcp', auth, async (req, res) => {
     const transport = new StreamableHTTPServerTransport({ enableJsonResponse: true })
+    const hostBase = `${req.protocol}://${req.headers.host}`
+    process.env.FILE_BASE_URL = hostBase
     res.on('close', () => transport.close())
     await server.connect(transport)
     await transport.handleRequest(req, res, req.body)
